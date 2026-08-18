@@ -816,79 +816,160 @@ button{
   text-shadow:0 0 30px rgba(0,240,255,.4);
 }
 
-.detail-html{
+/* ================= STYLE EMAIL CONTENT ================= */
+
+.email-content {
+  font-family:var(--font-body);
   font-size:14px;
   line-height:1.8;
-  color:var(--text-dim);
-  overflow-wrap:anywhere;
+  color:var(--text);
 }
 
-.detail-html pre{
-  white-space:pre-wrap;
-  background:rgba(0,0,0,.4);
-  padding:20px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  font-family:var(--font-mono);
-  font-size:13px;
-  line-height:1.8;
-  color:var(--text-dim);
-  overflow:auto;
+.email-content p {
+  margin-bottom:16px;
 }
 
-.detail-html a{
+.email-content a {
   color:var(--neon-cyan);
   text-decoration:underline;
   word-break:break-all;
+  transition:.2s;
 }
 
-.detail-html a:hover{
+.email-content a:hover {
   color:var(--neon-pink);
+  text-shadow:0 0 20px rgba(255,0,160,.3);
 }
 
-/* Style untuk button/link dari email */
-.detail-html .email-btn,
-.detail-html .btn,
-.detail-html button,
-.detail-html [role="button"],
-.detail-html .button,
-.detail-html .cta-button,
-.detail-html .action-button,
-.detail-html .link-button {
+.email-content .email-link-wrapper {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:16px 0;
+  padding:16px 20px;
+  background:rgba(0,240,255,.05);
+  border:1px solid var(--border);
+  border-radius:10px;
+  flex-wrap:wrap;
+}
+
+.email-content .email-link-wrapper .link-text {
+  flex:1;
+  min-width:100px;
+  word-break:break-all;
+  font-size:13px;
+  color:var(--text-dim);
+}
+
+.email-content .email-link-wrapper .link-actions {
+  display:flex;
+  gap:8px;
+  flex-shrink:0;
+}
+
+.email-content .email-link-wrapper .link-actions button {
+  padding:6px 14px;
+  background:rgba(0,240,255,.1);
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:var(--neon-cyan);
+  cursor:pointer;
+  font-size:12px;
+  font-family:var(--font-mono);
+  transition:.2s;
+}
+
+.email-content .email-link-wrapper .link-actions button:hover {
+  background:rgba(0,240,255,.2);
+  border-color:var(--neon-cyan);
+  box-shadow:0 0 20px rgba(0,240,255,.2);
+}
+
+.email-content .email-link-wrapper .link-actions button.copy-link-btn {
+  background:rgba(0,255,136,.05);
+  border-color:rgba(0,255,136,.2);
+  color:var(--neon-green);
+}
+
+.email-content .email-link-wrapper .link-actions button.copy-link-btn:hover {
+  background:rgba(0,255,136,.15);
+  border-color:var(--neon-green);
+}
+
+.email-content .email-link-wrapper .link-actions button.open-link-btn {
+  background:rgba(0,240,255,.05);
+  border-color:rgba(0,240,255,.2);
+  color:var(--neon-cyan);
+}
+
+.email-content .email-link-wrapper .link-actions button.open-link-btn:hover {
+  background:rgba(0,240,255,.15);
+  border-color:var(--neon-cyan);
+}
+
+.email-content .email-button {
   display:inline-block;
+  padding:12px 28px;
   background:linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
   color:#000 !important;
-  padding:12px 28px;
   border-radius:8px;
   text-decoration:none;
   font-weight:700;
   font-size:14px;
-  border:none;
-  cursor:pointer;
   transition:.3s;
   box-shadow:0 0 30px rgba(0,240,255,.2);
+  border:none;
+  cursor:pointer;
 }
 
-.detail-html .email-btn:hover,
-.detail-html .btn:hover,
-.detail-html button:hover,
-.detail-html [role="button"]:hover,
-.detail-html .button:hover,
-.detail-html .cta-button:hover,
-.detail-html .action-button:hover,
-.detail-html .link-button:hover {
+.email-content .email-button:hover {
   transform:translateY(-2px);
   box-shadow:0 0 50px rgba(0,240,255,.4);
 }
 
-/* Gaya untuk container link/button agar terlihat */
-.detail-html .email-link-container {
+.email-content .link-container {
   margin:16px 0;
-  padding:16px;
-  background:rgba(0,240,255,.05);
+  padding:16px 20px;
+  background:rgba(0,240,255,.03);
   border:1px solid var(--border);
   border-radius:8px;
-  text-align:center;
+}
+
+.email-content .link-container .link-label {
+  font-size:11px;
+  color:var(--text-muted);
+  font-family:var(--font-mono);
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+
+.email-content .link-container .link-value {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.email-content .link-container .link-value a {
+  flex:1;
+  min-width:100px;
+}
+
+.email-content .link-container .link-value .link-copy-btn {
+  padding:4px 12px;
+  background:rgba(0,240,255,.05);
+  border:1px solid var(--border);
+  border-radius:4px;
+  color:var(--text-dim);
+  cursor:pointer;
+  font-size:11px;
+  font-family:var(--font-mono);
+  transition:.2s;
+}
+
+.email-content .link-container .link-value .link-copy-btn:hover {
+  background:rgba(0,240,255,.1);
+  color:var(--neon-cyan);
 }
 
 /* ================= TOAST ================= */
@@ -1061,6 +1142,20 @@ button{
 
   .modal-body{
     padding:20px;
+  }
+
+  .email-content .email-link-wrapper {
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .email-content .email-link-wrapper .link-actions {
+    justify-content:center;
+  }
+
+  .email-content .link-container .link-value {
+    flex-direction:column;
+    align-items:stretch;
   }
 }
 
@@ -2139,63 +2234,156 @@ function renderMessages(){
 
 
 /* =========================================================
-   RENDER HTML EMAIL DENGAN LINK & BUTTON
+   RENDER EMAIL HTML DENGAN LINK YANG BISA DIKLIK & DISALIN
    ========================================================= */
 
 function renderEmailContent(html, body) {
   
-  // Jika ada HTML dari pengirim, tampilkan dengan link yang bisa diklik
+  let content = '';
+  
   if(html) {
     // Clean HTML dari script berbahaya
     let cleanHtml = stripDangerousContent(html);
     
-    // Proses link agar bisa diklik
-    cleanHtml = processLinks(cleanHtml);
+    // Proses link agar bisa diklik dan disalin
+    cleanHtml = processEmailLinks(cleanHtml);
     
-    // Bungkus dengan container yang aman
-    return `
-      <div class="detail-html email-content">
-        ${cleanHtml}
-      </div>
-    `;
+    content = cleanHtml;
+  } else {
+    // Fallback ke plain text dengan link yang diproses
+    content = escapeHtml(body || 'No content');
+    content = processPlainTextLinks(content);
   }
   
-  // Fallback ke plain text
   return `
-    <div class="detail-html">
-      <pre>${escapeHtml(body || 'No content')}</pre>
+    <div class="email-content">
+      ${content}
     </div>
   `;
 }
 
-function processLinks(html) {
-  // Ubah link mentah menjadi anchor tag
+function processEmailLinks(html) {
   let processed = html;
   
-  // Pattern untuk URL
-  const urlPattern = /(https?:\/\/[^\s<>"']+)/gi;
+  // Cari semua tag <a> yang ada
+  const linkRegex = /<a\s+([^>]*href=["']([^"']*)["'][^>]*)>(.*?)<\/a>/gi;
   
-  // Pattern untuk mailto
-  const mailtoPattern = /(mailto:[^\s<>"']+)/gi;
-  
-  // Ganti URL dengan anchor tag
-  processed = processed.replace(urlPattern, function(url) {
-    // Skip jika sudah dalam tag anchor
-    if(url.match(/^<a\s/i)) return url;
-    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`;
+  processed = processed.replace(linkRegex, function(match, attrs, href, text) {
+    // Jika link hanya "#" atau kosong, skip
+    if(!href || href === '#' || href.trim() === '') {
+      return match;
+    }
+    
+    // Buat wrapper dengan link yang bisa diklik dan tombol copy
+    return `
+      <div class="email-link-wrapper">
+        <div class="link-text">
+          <a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">
+            ${text || escapeHtml(href)}
+          </a>
+        </div>
+        <div class="link-actions">
+          <button class="open-link-btn" onclick="openLink('${escapeJsString(href)}')">
+            <i class="fas fa-external-link-alt"></i> Buka
+          </button>
+          <button class="copy-link-btn" onclick="copyLink('${escapeJsString(href)}')">
+            <i class="fas fa-copy"></i> Salin
+          </button>
+        </div>
+      </div>
+    `;
   });
   
-  // Ganti mailto dengan anchor tag
-  processed = processed.replace(mailtoPattern, function(mailto) {
-    return `<a href="${escapeHtml(mailto)}">${escapeHtml(mailto)}</a>`;
+  // Cari URL mentah yang belum jadi link
+  const urlRegex = /(https?:\/\/[^\s<>"']+)/gi;
+  processed = processed.replace(urlRegex, function(url) {
+    // Skip jika sudah dalam tag anchor atau sudah diproses
+    if(url.match(/^<a\s/i) || url.match(/href=/i)) return url;
+    
+    return `
+      <div class="email-link-wrapper">
+        <div class="link-text">
+          <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+            ${escapeHtml(url)}
+          </a>
+        </div>
+        <div class="link-actions">
+          <button class="open-link-btn" onclick="openLink('${escapeJsString(url)}')">
+            <i class="fas fa-external-link-alt"></i> Buka
+          </button>
+          <button class="copy-link-btn" onclick="copyLink('${escapeJsString(url)}')">
+            <i class="fas fa-copy"></i> Salin
+          </button>
+        </div>
+      </div>
+    `;
   });
   
   return processed;
 }
 
+function processPlainTextLinks(text) {
+  const urlRegex = /(https?:\/\/[^\s<>"']+)/gi;
+  return text.replace(urlRegex, function(url) {
+    return `
+      <div class="email-link-wrapper">
+        <div class="link-text">
+          <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+            ${escapeHtml(url)}
+          </a>
+        </div>
+        <div class="link-actions">
+          <button class="open-link-btn" onclick="openLink('${escapeJsString(url)}')">
+            <i class="fas fa-external-link-alt"></i> Buka
+          </button>
+          <button class="copy-link-btn" onclick="copyLink('${escapeJsString(url)}')">
+            <i class="fas fa-copy"></i> Salin
+          </button>
+        </div>
+      </div>
+    `;
+  });
+}
 
 /* =========================================================
-   OPEN MESSAGE - DIPERBAIKI UNTUK TAMPILKAN LINK
+   FUNGSI UNTUK LINK
+   ========================================================= */
+
+function openLink(url) {
+  if(!url) return;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+async function copyLink(url) {
+  if(!url) {
+    toast('>> TIDAK ADA LINK', 'err');
+    return;
+  }
+  
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('>> LINK DISALIN', 'ok');
+  } catch(e) {
+    // Fallback: gunakan metode lama
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = url;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      toast('>> LINK DISALIN', 'ok');
+    } catch(err) {
+      toast('>> GAGAL MENYALIN', 'err');
+    }
+  }
+}
+
+
+/* =========================================================
+   OPEN MESSAGE
    ========================================================= */
 
 async function openMessage(index){
@@ -2280,7 +2468,7 @@ async function openMessage(index){
 
   }
 
-  // Render konten email dengan link yang bisa diklik
+  // Render konten email dengan link yang bisa diklik dan disalin
   const contentHtml = renderEmailContent(html, body);
 
   document.getElementById(
