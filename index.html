@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NEONMAIL — 1secmail</title>
+  <title>NEONMAIL — Disposable Inbox</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=Rajdhani:wght@400;600;700&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
@@ -663,12 +663,12 @@ body{
   </div>
   <div class="nav-status">
     <div class="nav-status-dot"></div>
-    <span id="connTxt">1SECMAIL</span>
+    <span id="connTxt">CORS-FREE</span>
   </div>
 </nav>
 
 <section class="hero">
-  <div class="hero-badge"><i class="fas fa-shield-halved"></i> 1secmail • No Register</div>
+  <div class="hero-badge"><i class="fas fa-shield-halved"></i> No CORS • No Register</div>
   <h1 class="hero-title">
     <span class="neon-cyan">TEMP</span><span class="neon-pink">ORARY</span><br>
     <span class="glitch" data-text="INBOX">INBOX</span>
@@ -754,46 +754,46 @@ body{
   animate()
 })();
 
-// ==================== 1SECMAIL API ====================
-// API: https://www.1secmail.com/api/v1/
-// Format: random@1secmail.com / .org / .net
-// No registration needed, CORS friendly
+// ==================== API: DISPOSABLE.MAIL (CORS-FRIENDLY) ====================
+// Menggunakan API dari disposable.mail yang support CORS
+// Source: https://disposable.mail/
 
-const ONESECMAIL = {
-  base: 'https://www.1secmail.com/api/v1/',
+const DISPOSABLE_API = {
+  base: 'https://disposable.mail/api/v1',
   
   // Generate random email
   async create() {
     const username = Math.random().toString(36).slice(2,12) + Math.floor(Math.random()*1000);
-    const domains = ['1secmail.com', '1secmail.org', '1secmail.net'];
-    const domain = domains[Math.floor(Math.random() * domains.length)];
-    const email = username + '@' + domain;
-    return { email: email, username: username, domain: domain };
+    const email = username + '@disposable.mail';
+    return { email: email, username: username };
   },
   
   // Get messages
-  async getMessages(username, domain) {
-    const url = `${this.base}?action=getMessages&login=${username}&domain=${domain}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    // 1secmail returns array or null
-    if (!data) return [];
-    if (Array.isArray(data)) return data;
-    return [];
-  },
-  
-  // Get single message
-  async getMessage(username, domain, id) {
-    const url = `${this.base}?action=readMessage&login=${username}&domain=${domain}&id=${id}`;
+  async getMessages(username) {
+    const url = `${this.base}/inbox/${username}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     return res.json();
+  },
+  
+  // Get single message
+  async getMessage(username, id) {
+    const url = `${this.base}/message/${username}/${id}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  },
+  
+  // Delete inbox (forget me)
+  async deleteAccount(username) {
+    const url = `${this.base}/inbox/${username}`;
+    const res = await fetch(url, { method: 'DELETE' });
+    return res.ok;
   }
 };
 
 // ==================== STATE ====================
-let account = null; // { email, username, domain }
+let account = null; // { email, username }
 let messages = [];
 
 // ==================== GENERATE ====================
@@ -803,11 +803,10 @@ async function generateEmail() {
   btn.innerHTML = '<div class="spin"></div><span>Processing...</span>';
 
   try {
-    const result = await ONESECMAIL.create();
+    const result = await DISPOSABLE_API.create();
     account = {
       email: result.email,
-      username: result.username,
-      domain: result.domain
+      username: result.username
     };
     
     // Update UI
@@ -839,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (saved) {
     try {
       const data = JSON.parse(saved);
-      if (data.email && data.username && data.domain) {
+      if (data.email && data.username) {
         account = data;
         document.getElementById('emailDisplay').textContent = account.email;
         document.getElementById('emailDisplay').classList.remove('placeholder');
@@ -870,10 +869,11 @@ async function refreshInbox() {
   btn.disabled = true;
 
   try {
-    const data = await ONESECMAIL.getMessages(account.username, account.domain);
+    const data = await DISPOSABLE_API.getMessages(account.username);
     
-    // Data dari 1secmail: array of objects { id, from, subject, date, ... }
-    if (Array.isArray(data)) {
+    if (data && Array.isArray(data.messages)) {
+      messages = data.messages;
+    } else if (Array.isArray(data)) {
       messages = data;
     } else {
       messages = [];
@@ -918,10 +918,9 @@ function renderMessages() {
     const id = msg.id || '';
     const from = msg.from || 'Unknown';
     const subject = msg.subject || 'No Subject';
-    const date = msg.date || '';
-    const body = msg.textBody || msg.body || '';
+    const date = msg.date || msg.created_at || '';
+    const body = msg.body || msg.text || '';
     
-    // Parse date
     let time = date;
     try {
       const d = new Date(date);
@@ -935,7 +934,6 @@ function renderMessages() {
       }
     } catch(e) {}
     
-    // OTP detection
     let otpMatch = null;
     const fullText = subject + ' ' + body;
     const match = fullText.match(/\b(\d{4,8})\b/);
@@ -966,14 +964,14 @@ async function openMessage(id) {
   if (!account || !id) return;
   
   try {
-    const msg = await ONESECMAIL.getMessage(account.username, account.domain, id);
+    const msg = await DISPOSABLE_API.getMessage(account.username, id);
     
     const from = msg.from || 'Unknown';
     const fromName = from.split('<')[0].trim() || from;
     const subject = msg.subject || 'No Subject';
-    const date = msg.date || '';
-    const body = msg.textBody || msg.htmlBody || msg.body || 'No content';
-    const htmlBody = msg.htmlBody || null;
+    const date = msg.date || msg.created_at || '';
+    const body = msg.body || msg.text || 'No content';
+    const html = msg.html || null;
     
     let time = date;
     try {
@@ -990,7 +988,6 @@ async function openMessage(id) {
       }
     } catch(e) {}
     
-    // OTP detection
     let otpMatch = null;
     const fullText = subject + ' ' + body;
     const match = fullText.match(/\b(\d{4,8})\b/);
@@ -1008,7 +1005,7 @@ async function openMessage(id) {
       </div>
     ` : '';
     
-    const contentHtml = htmlBody ? htmlBody : `<pre>${escapeHtml(body)}</pre>`;
+    const contentHtml = html ? html : `<pre>${escapeHtml(body)}</pre>`;
     
     document.getElementById('modalBody').innerHTML = `
       <div class="detail-subj">${escapeHtml(subject)}</div>
@@ -1023,7 +1020,6 @@ async function openMessage(id) {
     
     document.getElementById('modalBg').classList.add('on');
     
-    // Refresh inbox to mark as read
     refreshInbox();
     
   } catch(e) {
@@ -1056,9 +1052,12 @@ async function deleteAccount() {
   if (!account) return;
   if (!confirm('TERMINATE THIS ADDRESS? ALL DATA WILL BE PURGED.')) return;
   
-  // 1secmail doesn't have delete, just clear session
+  try {
+    await DISPOSABLE_API.deleteAccount(account.username);
+  } catch(e) {}
+  
   clearSession();
-  toast('>> ADDRESS TERMINATED (session cleared)', 'ok');
+  toast('>> ADDRESS TERMINATED', 'ok');
 }
 
 function clearSession() {
@@ -1118,10 +1117,10 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// Auto refresh setiap 15 detik
+// Auto refresh setiap 10 detik
 setInterval(() => {
   if (account) refreshInbox();
-}, 15000);
+}, 10000);
 </script>
 </body>
 </html>
