@@ -1,1172 +1,1220 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEONMAIL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temp Mail - Disposable Temporary Email</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+        /* Container */
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+        }
 
-:root {
-  --cyan: #00f0ff;
-  --pink: #ff00a0;
-  --bg: #0a0a14;
-  --card: rgba(255,255,255,.04);
-  --border: rgba(0,240,255,.12);
-  --text: #c8c8e8;
-  --dim: #606080;
-  --muted: #404060;
-}
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+        }
 
-body {
-  font-family: 'Rajdhani', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding: 80px 16px 40px;
-}
+        .header .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            letter-spacing: -0.5px;
+        }
 
-/* NAV */
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(10,10,20,.95);
-  border-bottom: 1px solid var(--border);
-  z-index: 100;
-}
+        .header .logo span {
+            color: #4f46e5;
+        }
 
-.nav-logo {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--cyan);
-  letter-spacing: 2px;
-}
-.nav-logo span { color: var(--pink); }
+        .header .logo i {
+            color: #4f46e5;
+            margin-right: 6px;
+        }
 
-.nav-status {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+        .header .sub {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 4px;
+        }
 
-.nav-status .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #00ff88;
-  animation: blink 1.5s infinite;
-}
+        /* Card */
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+        }
 
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-/* HERO */
-.hero {
-  max-width: 640px;
-  margin: 0 auto 24px;
-  text-align: center;
-}
+        /* Email Box */
+        .email-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 14px 18px;
+            transition: 0.2s;
+        }
 
-.hero h1 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(28px, 6vw, 44px);
-  font-weight: 900;
-  letter-spacing: 3px;
-  margin-bottom: 6px;
-  color: #fff;
-}
-.hero h1 .c { color: var(--cyan); text-shadow: 0 0 30px rgba(0,240,255,.3); }
-.hero h1 .p { color: var(--pink); text-shadow: 0 0 30px rgba(255,0,160,.3); }
-.hero p {
-  font-size: 14px;
-  color: var(--dim);
-  max-width: 380px;
-  margin: 0 auto 24px;
-  line-height: 1.6;
-}
+        .email-box:focus-within {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
 
-/* CARD */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  backdrop-filter: blur(10px);
-}
+        .email-box .icon {
+            color: #9ca3af;
+            font-size: 18px;
+        }
 
-.card .label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  color: var(--cyan);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.card .label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
+        .email-box .addr {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a2e;
+            word-break: break-all;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
 
-/* EMAIL BOX */
-.email-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0,0,0,.4);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-bottom: 14px;
-}
+        .email-box .addr::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
 
-.email-box .icon {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--cyan);
-  font-size: 14px;
-  flex-shrink: 0;
-}
+        .email-box .actions {
+            display: flex;
+            gap: 6px;
+        }
 
-.email-box .addr {
-  flex: 1;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 13px;
-  color: var(--text);
-  word-break: break-all;
-  text-align: left;
-}
-.email-box .addr.placeholder { color: var(--dim); }
+        .email-box .actions button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.email-box .copy-btn {
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--border);
-  background: transparent;
-  border-radius: 8px;
-  color: var(--dim);
-  cursor: pointer;
-  transition: .2s;
-  font-size: 13px;
-}
-.email-box .copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .email-box .actions button:hover {
+            background: #e5e7eb;
+            color: #1a1a2e;
+        }
 
-/* BUTTON ROW */
-.btn-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+        .email-box .actions button.copy-btn:hover {
+            background: #4f46e5;
+            color: #fff;
+        }
 
-.btn-row .btn {
-  flex: 1;
-  min-width: 90px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: .2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--dim);
-}
-.btn-row .btn:hover { transform: translateY(-1px); }
-.btn-row .btn:disabled { opacity: .3; cursor: not-allowed; transform: none; }
+        /* Button Row */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
 
-.btn-gen {
-  border-color: var(--cyan) !important;
-  color: var(--cyan) !important;
-  background: rgba(0,240,255,.05) !important;
-}
-.btn-gen:hover { box-shadow: 0 0 30px rgba(0,240,255,.12); }
+        .btn {
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
 
-.btn-del {
-  border-color: var(--pink) !important;
-  color: var(--pink) !important;
-}
-.btn-del:hover { box-shadow: 0 0 30px rgba(255,0,160,.12); }
+        .btn-primary {
+            background: #4f46e5;
+            color: #fff;
+        }
 
-/* INBOX */
-.inbox-wrap {
-  max-width: 640px;
-  margin: 24px auto 0;
-}
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
 
-.inbox-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 4px;
-  margin-bottom: 12px;
-}
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-.inbox-header h2 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--cyan);
-}
+        .btn-outline {
+            background: transparent;
+            color: #6b7280;
+            border: 1.5px solid #e5e7eb;
+        }
 
-.inbox-header .right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #d1d5db;
+        }
 
-.inbox-header .count {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  color: #00ff88;
-  padding: 2px 12px;
-  border: 1px solid rgba(0,255,136,.2);
-  border-radius: 4px;
-}
+        .btn-outline:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
-.inbox-header .meta {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  color: var(--muted);
-}
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
 
-/* MESSAGE LIST */
-.msg-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+        .btn-danger:hover {
+            background: #fecaca;
+        }
 
-.msg-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px 18px;
-  cursor: pointer;
-  transition: .2s;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-.msg-card:hover {
-  border-color: rgba(0,240,255,.25);
-  background: rgba(255,255,255,.06);
-  transform: translateX(3px);
-}
+        .btn-danger:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
 
-.msg-card .avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--cyan);
-  flex-shrink: 0;
-}
+        /* Inbox */
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
 
-.msg-card .body { flex: 1; min-width: 0; }
-.msg-card .top {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 3px;
-}
-.msg-card .from {
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.msg-card .time {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  color: var(--dim);
-  flex-shrink: 0;
-}
-.msg-card .subj {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--cyan);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.msg-card .prev {
-  font-size: 12px;
-  color: var(--dim);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.msg-card .otp-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 4px;
-  padding: 2px 10px;
-  background: rgba(0,240,255,.06);
-  border: 1px solid rgba(0,240,255,.15);
-  border-radius: 4px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  color: var(--cyan);
-}
+        .inbox-header .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-/* EMPTY */
-.empty {
-  text-align: center;
-  padding: 40px 20px;
-  border: 1px dashed var(--border);
-  border-radius: 10px;
-}
-.empty .icon {
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
-  font-size: 20px;
-  color: var(--dim);
-}
-.empty h3 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 13px;
-  letter-spacing: 2px;
-  color: var(--dim);
-}
-.empty p {
-  font-size: 12px;
-  color: var(--muted);
-}
+        .inbox-header .left h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
 
-/* MODAL */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.92);
-  backdrop-filter: blur(20px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  opacity: 0;
-  visibility: hidden;
-  transition: .3s;
-}
-.modal.open { opacity: 1; visibility: visible; }
+        .inbox-header .count {
+            background: #e5e7eb;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4b5563;
+        }
 
-.modal-box {
-  width: 100%;
-  max-width: 640px;
-  max-height: 85vh;
-  background: rgba(10,10,20,.96);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transform: scale(.95);
-  transition: .3s;
-}
-.modal.open .modal-box { transform: scale(1); }
+        .inbox-header .meta {
+            font-size: 12px;
+            color: #9ca3af;
+        }
 
-.modal-head {
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-head h3 {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: var(--cyan);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.modal-close {
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--border);
-  background: transparent;
-  border-radius: 6px;
-  color: var(--dim);
-  cursor: pointer;
-  font-size: 15px;
-  transition: .2s;
-}
-.modal-close:hover { border-color: var(--pink); color: var(--pink); }
+        /* Message List */
+        .msg-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  flex: 1;
-}
+        .msg-item {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
 
-/* DETAIL */
-.detail-subj {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-.detail-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-}
-.detail-meta span {
-  padding: 3px 10px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  color: var(--dim);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.detail-meta span i { color: var(--cyan); }
+        .msg-item:hover {
+            border-color: #4f46e5;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.06);
+            transform: translateX(2px);
+        }
 
-/* EMAIL CONTENT */
-.email-content {
-  font-size: 14px;
-  line-height: 1.8;
-}
-.email-content p { margin-bottom: 10px; }
-.email-content a {
-  color: var(--cyan);
-  text-decoration: underline;
-  word-break: break-all;
-}
-.email-content a:hover { color: var(--pink); }
+        .msg-item .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #eef2ff;
+            color: #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
 
-/* LINK WRAPPER - BISA DIKLIK, DI-SALIN, LONG PRESS */
-.link-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 10px 0;
-  padding: 10px 14px;
-  background: rgba(0,240,255,.05);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  flex-wrap: wrap;
-  transition: .2s;
-  position: relative;
-}
-.link-wrap:hover {
-  background: rgba(0,240,255,.08);
-  border-color: rgba(0,240,255,.25);
-}
+        .msg-item .body {
+            flex: 1;
+            min-width: 0;
+        }
 
-.link-wrap .link-text {
-  flex: 1;
-  min-width: 60px;
-  word-break: break-all;
-  font-size: 13px;
-}
-.link-wrap .link-text a {
-  color: var(--cyan);
-  text-decoration: underline;
-  display: inline-block;
-  padding: 4px 0;
-}
+        .msg-item .top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
 
-.link-wrap .actions {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
-}
-.link-wrap .actions button {
-  padding: 4px 12px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.04);
-  border-radius: 4px;
-  color: var(--dim);
-  cursor: pointer;
-  font-size: 10px;
-  font-family: 'Share Tech Mono', monospace;
-  transition: .2s;
-}
-.link-wrap .actions button:hover {
-  border-color: var(--cyan);
-  color: var(--cyan);
-  background: rgba(0,240,255,.08);
-}
+        .msg-item .from {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-.link-wrap .actions .btn-copy {
-  border-color: rgba(0,255,136,.2);
-  color: #00ff88;
-}
-.link-wrap .actions .btn-copy:hover {
-  border-color: #00ff88;
-  background: rgba(0,255,136,.1);
-}
+        .msg-item .time {
+            font-size: 12px;
+            color: #9ca3af;
+            flex-shrink: 0;
+        }
 
-.link-wrap .actions .btn-open {
-  border-color: rgba(0,240,255,.2);
-  color: var(--cyan);
-}
-.link-wrap .actions .btn-open:hover {
-  border-color: var(--cyan);
-  background: rgba(0,240,255,.1);
-}
+        .msg-item .subj {
+            font-size: 13px;
+            font-weight: 500;
+            color: #4f46e5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-/* Toast copy via long press */
-.copy-toast {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,240,255,.15);
-  color: var(--cyan);
-  padding: 8px 20px;
-  border-radius: 8px;
-  border: 1px solid rgba(0,240,255,.3);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 12px;
-  z-index: 3000;
-  opacity: 0;
-  transition: .3s;
-  pointer-events: none;
-}
-.copy-toast.show { opacity: 1; }
+        .msg-item .preview {
+            font-size: 13px;
+            color: #6b7280;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+        }
 
-/* OTP BOX */
-.otp-box {
-  background: rgba(0,240,255,.05);
-  border: 1px solid rgba(0,240,255,.15);
-  border-radius: 10px;
-  padding: 14px 18px;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.otp-box .lbl {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 9px;
-  color: var(--cyan);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.otp-box .code {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--cyan);
-  letter-spacing: 6px;
-}
-.otp-box .copy-otp {
-  padding: 5px 14px;
-  border: 1px solid var(--cyan);
-  background: rgba(0,240,255,.05);
-  border-radius: 6px;
-  color: var(--cyan);
-  cursor: pointer;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  transition: .2s;
-}
-.otp-box .copy-otp:hover { background: rgba(0,240,255,.12); }
+        .msg-item .otp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+            padding: 2px 10px;
+            background: #eef2ff;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4f46e5;
+        }
 
-/* TOAST */
-.toast-stack {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.toast {
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  animation: slideIn .3s;
-}
-@keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-.toast.ok { background: rgba(0,255,136,.08); color: #00ff88; border-color: rgba(0,255,136,.2); }
-.toast.err { background: rgba(255,0,160,.08); color: var(--pink); border-color: rgba(255,0,160,.2); }
-.toast.inf { background: rgba(0,240,255,.08); color: var(--cyan); border-color: rgba(0,240,255,.2); }
+        /* Empty State */
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            background: #fafafa;
+            border-radius: 12px;
+            border: 2px dashed #e5e7eb;
+        }
 
-/* SPINNER */
-.spin {
-  display: inline-block;
-  width: 13px;
-  height: 13px;
-  border: 2px solid rgba(0,240,255,.1);
-  border-top-color: var(--cyan);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+        .empty .icon {
+            font-size: 40px;
+            color: #d1d5db;
+            margin-bottom: 12px;
+        }
 
-/* RESPONSIVE */
-@media (max-width: 600px) {
-  body { padding: 70px 10px 30px; }
-  .nav { padding: 10px 14px; }
-  .nav-logo { font-size: 14px; }
-  .card { padding: 16px; }
-  .email-box { padding: 10px 12px; }
-  .email-box .addr { font-size: 12px; }
-  .btn-row .btn { min-width: 70px; padding: 8px 12px; font-size: 8px; }
-  .modal-body { padding: 14px; }
-  .otp-box .code { font-size: 20px; letter-spacing: 4px; }
-  .link-wrap { flex-direction: column; align-items: stretch; }
-  .link-wrap .actions { justify-content: center; }
-  .inbox-header .right .meta { display: none; }
-}
+        .empty h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #6b7280;
+        }
 
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-</style>
+        .empty p {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.25s;
+        }
+
+        .modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 640px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.96);
+            transition: 0.25s;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal.open .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-head {
+            padding: 18px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-head h3 {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 8px;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #e5e7eb;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Detail */
+        .detail-subj {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-meta span {
+            font-size: 12px;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 4px 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-meta span i {
+            color: #4f46e5;
+        }
+
+        /* OTP */
+        .otp-box {
+            background: #eef2ff;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .otp-box .lbl {
+            font-size: 11px;
+            font-weight: 600;
+            color: #4f46e5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .otp-box .code {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            letter-spacing: 4px;
+        }
+
+        .otp-box .copy-otp {
+            padding: 6px 16px;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .otp-box .copy-otp:hover {
+            background: #4338ca;
+        }
+
+        /* Email Content */
+        .email-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #1a1a2e;
+        }
+
+        .email-content p {
+            margin-bottom: 10px;
+        }
+
+        .email-content a {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
+
+        .email-content a:hover {
+            color: #4338ca;
+        }
+
+        /* Link Wrapper */
+        .link-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 10px 0;
+            padding: 10px 16px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .link-wrap .link-text {
+            flex: 1;
+            min-width: 60px;
+            word-break: break-all;
+            font-size: 13px;
+        }
+
+        .link-wrap .link-text a {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
+
+        .link-wrap .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .link-wrap .actions button {
+            padding: 4px 12px;
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #6b7280;
+            font-family: inherit;
+        }
+
+        .link-wrap .actions button:hover {
+            background: #4f46e5;
+            color: #fff;
+            border-color: #4f46e5;
+        }
+
+        /* Toast */
+        .toast-stack {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toast {
+            padding: 10px 18px;
+            background: #1a1a2e;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast.ok {
+            background: #065f46;
+        }
+        .toast.err {
+            background: #991b1b;
+        }
+        .toast.inf {
+            background: #1e40af;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 18px 16px;
+            }
+
+            .email-box {
+                padding: 10px 14px;
+                flex-wrap: wrap;
+            }
+
+            .email-box .addr {
+                font-size: 13px;
+                min-width: 120px;
+                order: 2;
+                flex: 1 1 100%;
+            }
+
+            .email-box .icon {
+                order: 1;
+            }
+
+            .email-box .actions {
+                order: 3;
+            }
+
+            .btn-row .btn {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .modal-box {
+                max-width: 100%;
+                margin: 10px;
+            }
+
+            .modal-body {
+                padding: 16px;
+            }
+
+            .otp-box .code {
+                font-size: 22px;
+                letter-spacing: 3px;
+            }
+
+            .link-wrap {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .link-wrap .actions {
+                justify-content: center;
+            }
+
+            .inbox-header .meta {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<!-- Toast untuk long press -->
-<div class="copy-toast" id="copyToast">📋 Link disalin!</div>
+    <div class="container">
 
-<nav class="nav">
-  <div class="nav-logo">NEON<span>MAIL</span></div>
-  <div class="nav-status">
-    <span class="dot"></span>
-    <span id="connTxt">READY</span>
-  </div>
-</nav>
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-envelope"></i> Temp<span>Mail</span>
+            </div>
+            <div class="sub">Disposable Temporary Email</div>
+        </div>
 
-<section class="hero">
-  <h1><span class="c">TEMP</span><span class="p">ORARY</span> INBOX</h1>
-  <p>Disposable email instantly. Receive OTPs & verification codes.</p>
+        <!-- CARD -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-at"></i> Your Temporary Email Address
+            </div>
 
-  <div class="card">
-    <div class="label"><i class="fas fa-terminal"></i> Target Address</div>
+            <div class="email-box">
+                <span class="icon"><i class="fas fa-envelope"></i></span>
+                <input class="addr" id="emailDisplay" placeholder="Generate new address" readonly>
+                <div class="actions">
+                    <button onclick="copyEmail()" id="copyBtn" disabled title="Copy email">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button onclick="refreshInbox()" id="refBtn" disabled title="Refresh inbox">
+                        <i class="fas fa-sync" id="refIcon"></i>
+                    </button>
+                    <button onclick="deleteAccount()" id="delBtn" disabled title="Delete mailbox" style="color:#dc2626;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
 
-    <div class="email-box">
-      <div class="icon"><i class="fas fa-envelope"></i></div>
-      <div class="addr placeholder" id="emailDisplay">GENERATE NEW ADDRESS</div>
-      <button class="copy-btn" id="copyBtn" onclick="copyEmail()" disabled><i class="fas fa-copy"></i></button>
+            <div class="btn-row">
+                <button class="btn btn-primary" id="genBtn" onclick="generateEmail()">
+                    <i class="fas fa-plus"></i> Generate
+                </button>
+                <button class="btn btn-outline" onclick="refreshInbox()" id="refBtn2" disabled>
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- INBOX -->
+        <div class="card" style="padding: 20px 24px;">
+            <div class="inbox-header">
+                <div class="left">
+                    <h2>Inbox</h2>
+                    <span class="count" id="msgCount">0</span>
+                </div>
+                <span class="meta" id="lastRef">Waiting...</span>
+            </div>
+
+            <div class="msg-list" id="msgList">
+                <div class="empty">
+                    <div class="icon"><i class="fas fa-inbox"></i></div>
+                    <h3>Your inbox is empty</h3>
+                    <p>Waiting for incoming emails</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="text-align:center;padding:20px 0 10px;font-size:12px;color:#9ca3af;">
+            <p>Forget about spam. Keep your real mailbox clean and secure.</p>
+        </div>
     </div>
 
-    <div class="btn-row">
-      <button class="btn btn-gen" id="genBtn" onclick="generateEmail()">
-        <i class="fas fa-rocket"></i> Generate
-      </button>
-      <button class="btn" id="refBtn" onclick="refreshInbox()" disabled>
-        <i class="fas fa-sync" id="refIcon"></i> Refresh
-      </button>
-      <button class="btn btn-del" id="delBtn" onclick="deleteAccount()" disabled>
-        <i class="fas fa-trash"></i> Delete
-      </button>
+    <!-- MODAL -->
+    <div class="modal" id="modalBg">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h3><i class="fas fa-envelope" style="color:#4f46e5;"></i> Message</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
     </div>
-  </div>
-</section>
 
-<section class="inbox-wrap">
-  <div class="inbox-header">
-    <h2>INBOX</h2>
-    <div class="right">
-      <span class="count" id="msgCount">0</span>
-      <span class="meta" id="lastRef">STANDBY</span>
-    </div>
-  </div>
+    <!-- TOAST -->
+    <div class="toast-stack" id="toastStack"></div>
 
-  <div class="msg-grid" id="msgList">
-    <div class="empty">
-      <div class="icon"><i class="fas fa-inbox"></i></div>
-      <h3>NO SIGNAL</h3>
-      <p>Generate email to start receiving transmissions.</p>
-    </div>
-  </div>
-</section>
+    <script>
+        const TEMPY_API = 'https://tempy.email/api/v1';
 
-<div class="modal" id="modalBg">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3><i class="fas fa-envelope"></i> TRANSMISSION</h3>
-      <button class="modal-close" onclick="closeModal()"><i class="fas fa-xmark"></i></button>
-    </div>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
+        let account = null;
+        let messages = [];
+        let refreshTimer = null;
+        let isGenerating = false;
 
-<div class="toast-stack" id="toastStack"></div>
+        /* =========================================================
+           API
+           ========================================================= */
+        const API = {
+            async request(url, options = {}) {
+                const res = await fetch(url, {
+                    ...options,
+                    headers: { 'Accept': 'application/json', ...(options.headers || {}) }
+                });
+                let data = null;
+                const text = await res.text();
+                if (text) { try { data = JSON.parse(text); } catch { data = text; } }
+                if (!res.ok) {
+                    let msg = 'HTTP ' + res.status;
+                    if (data) {
+                        if (typeof data === 'string') msg += ': ' + data.slice(0, 150);
+                        else if (data.error) msg += ': ' + data.error;
+                        else if (data.message) msg += ': ' + data.message;
+                    }
+                    throw new Error(msg);
+                }
+                return data;
+            },
+            createMailbox() { return this.request(TEMPY_API + '/mailbox', { method: 'POST' }); },
+            getMessages(email) { return this.request(TEMPY_API + '/mailbox/' + encodeURIComponent(email) + '/messages'); },
+            getMailbox(email) { return this.request(TEMPY_API + '/mailbox/' + encodeURIComponent(email)); },
+            deleteMailbox(email) { return this.request(TEMPY_API + '/mailbox/' + encodeURIComponent(email), { method: 'DELETE' }); }
+        };
 
-<script>
-const TEMPY_API = 'https://tempy.email/api/v1';
+        /* =========================================================
+           GENERATE
+           ========================================================= */
+        async function generateEmail() {
+            if (isGenerating) return;
+            if (account) {
+                if (!confirm('Buat email baru? Email lama akan dihapus.')) return;
+                try { await API.deleteMailbox(account.email); } catch (e) {}
+                clearSession(false);
+            }
 
-let account = null;
-let messages = [];
-let refreshTimer = null;
-let isGenerating = false;
-let longPressTimer = null;
+            const btn = document.getElementById('genBtn');
+            const orig = btn.innerHTML;
+            btn.disabled = true;
+            isGenerating = true;
+            btn.innerHTML = '<span class="spinner"></span> Creating...';
 
-/* =========================================================
-   API
-   ========================================================= */
-const API = {
-  async request(url, options = {}) {
-    const res = await fetch(url, {
-      ...options,
-      headers: { 'Accept': 'application/json', ...(options.headers || {}) }
-    });
-    let data = null;
-    const text = await res.text();
-    if (text) { try { data = JSON.parse(text); } catch { data = text; } }
-    if (!res.ok) {
-      let msg = 'HTTP ' + res.status;
-      if (data) {
-        if (typeof data === 'string') msg += ': ' + data.slice(0, 150);
-        else if (data.error) msg += ': ' + data.error;
-        else if (data.message) msg += ': ' + data.message;
-      }
-      throw new Error(msg);
-    }
-    return data;
-  },
-  createMailbox() { return this.request(TEMPY_API + '/mailbox', { method: 'POST' }); },
-  getMessages(email) { return this.request(TEMPY_API + '/mailbox/' + encodeURIComponent(email) + '/messages'); },
-  getMailbox(email) { return this.request(TEMPY_API + '/mailbox/' + encodeURIComponent(email)); },
-  deleteMailbox(email) { return this.request(TEMPY_API + '/mailbox/' + encodeURIComponent(email), { method: 'DELETE' }); }
-};
-
-/* =========================================================
-   GENERATE
-   ========================================================= */
-async function generateEmail() {
-  if (isGenerating) return;
-  if (account) {
-    if (!confirm('Buat email baru? Email lama akan dihapus.')) return;
-    try { await API.deleteMailbox(account.email); } catch(e) {}
-    clearSession(false);
-  }
-
-  const btn = document.getElementById('genBtn');
-  const orig = btn.innerHTML;
-  btn.disabled = true;
-  isGenerating = true;
-  btn.innerHTML = '<div class="spin"></div> Creating...';
-
-  try {
-    const result = await API.createMailbox();
-    if (!result?.email) throw new Error('API tidak mengembalikan email');
-    account = { email: result.email, webUrl: result.webUrl || null, expiresAt: result.expiresAt || null, createdAt: Date.now() };
-    messages = [];
-    localStorage.setItem('neonmail_session', JSON.stringify(account));
-    updateUI();
-    toast('>> Generated: ' + account.email, 'ok');
-    renderMessages();
-    await refreshInbox();
-  } catch (e) {
-    toast('>> Generate failed: ' + e.message, 'err');
-  } finally {
-    btn.disabled = false;
-    isGenerating = false;
-    btn.innerHTML = orig;
-  }
-}
-
-/* =========================================================
-   RESTORE SESSION
-   ========================================================= */
-document.addEventListener('DOMContentLoaded', async function() {
-  const saved = localStorage.getItem('neonmail_session');
-  if (!saved) return;
-  try {
-    const data = JSON.parse(saved);
-    if (data?.email) {
-      account = data;
-      updateUI();
-      toast('>> Session restored', 'inf');
-      try {
-        await API.getMailbox(account.email);
-        await refreshInbox();
-      } catch(e) {
-        if (/404|expired|deactivated/i.test(e.message)) {
-          toast('>> Mailbox expired', 'err');
-          clearSession(false);
+            try {
+                const result = await API.createMailbox();
+                if (!result?.email) throw new Error('API tidak mengembalikan email');
+                account = { email: result.email, webUrl: result.webUrl || null, expiresAt: result.expiresAt || null,
+                    createdAt: Date.now() };
+                messages = [];
+                localStorage.setItem('neonmail_session', JSON.stringify(account));
+                updateUI();
+                toast('Generated: ' + account.email, 'ok');
+                renderMessages();
+                await refreshInbox();
+            } catch (e) {
+                toast('Generate failed: ' + e.message, 'err');
+            } finally {
+                btn.disabled = false;
+                isGenerating = false;
+                btn.innerHTML = orig;
+            }
         }
-      }
-    }
-  } catch(e) { localStorage.removeItem('neonmail_session'); }
-});
 
-/* =========================================================
-   UI
-   ========================================================= */
-function updateUI() {
-  const el = document.getElementById('emailDisplay');
-  el.textContent = account.email;
-  el.classList.remove('placeholder');
-  document.getElementById('copyBtn').disabled = false;
-  document.getElementById('refBtn').disabled = false;
-  document.getElementById('delBtn').disabled = false;
-}
+        /* =========================================================
+           RESTORE SESSION
+           ========================================================= */
+        document.addEventListener('DOMContentLoaded', async function() {
+            const saved = localStorage.getItem('neonmail_session');
+            if (!saved) return;
+            try {
+                const data = JSON.parse(saved);
+                if (data?.email) {
+                    account = data;
+                    updateUI();
+                    toast('Session restored', 'inf');
+                    try {
+                        await API.getMailbox(account.email);
+                        await refreshInbox();
+                    } catch (e) {
+                        if (/404|expired|deactivated/i.test(e.message)) {
+                            toast('Mailbox expired', 'err');
+                            clearSession(false);
+                        }
+                    }
+                }
+            } catch (e) { localStorage.removeItem('neonmail_session'); }
+        });
 
-/* =========================================================
-   REFRESH
-   ========================================================= */
-async function refreshInbox() {
-  if (!account?.email) { toast('>> No active session', 'err'); return; }
-  const btn = document.getElementById('refBtn');
-  const icon = document.getElementById('refIcon');
-  icon.classList.add('fa-spin');
-  btn.disabled = true;
-  try {
-    const data = await API.getMessages(account.email);
-    messages = Array.isArray(data) ? data : (data?.messages || data?.emails || data?.data || []);
-    renderMessages();
-    document.getElementById('msgCount').textContent = messages.length;
-    document.getElementById('lastRef').textContent = 'SCAN: ' + new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    if (messages.length) toast('>> ' + messages.length + ' message' + (messages.length > 1 ? 's' : '') + ' received', 'inf');
-  } catch(e) {
-    if (/404|expired|deactivated/i.test(e.message)) {
-      toast('>> Mailbox expired', 'err');
-      clearSession(false);
-    } else {
-      toast('>> Refresh failed: ' + e.message, 'err');
-    }
-  } finally {
-    icon.classList.remove('fa-spin');
-    btn.disabled = !account;
-  }
-}
+        /* =========================================================
+           UI
+           ========================================================= */
+        function updateUI() {
+            const el = document.getElementById('emailDisplay');
+            el.value = account.email;
+            document.getElementById('copyBtn').disabled = false;
+            document.getElementById('refBtn').disabled = false;
+            document.getElementById('refBtn2').disabled = false;
+            document.getElementById('delBtn').disabled = false;
+        }
 
-/* =========================================================
-   RENDER
-   ========================================================= */
-function renderMessages() {
-  const container = document.getElementById('msgList');
-  document.getElementById('msgCount').textContent = messages.length || 0;
-  if (!messages?.length) {
-    container.innerHTML = `<div class="empty"><div class="icon"><i class="fas fa-inbox"></i></div><h3>NO SIGNAL</h3><p>Waiting for incoming transmissions...</p></div>`;
-    return;
-  }
-  container.innerHTML = messages.map((msg, i) => {
-    const from = cleanFromName(getFrom(msg));
-    const subj = getSubject(msg);
-    const body = getBody(msg);
-    const otp = extractOTP(subj + ' ' + body);
-    const time = formatDate(getDate(msg));
-    return `<div class="msg-card" onclick="openMessage(${i})">
-      <div class="avatar">${esc(from.charAt(0) || '?').toUpperCase()}</div>
-      <div class="body">
-        <div class="top"><span class="from">${esc(from)}</span><span class="time">${esc(time)}</span></div>
-        <div class="subj">${esc(subj)}</div>
-        <div class="prev">${esc(body.slice(0, 160))}</div>
-        ${otp ? `<div class="otp-tag"><i class="fas fa-shield-halved"></i> OTP: ${esc(otp)}</div>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-}
+        /* =========================================================
+           REFRESH
+           ========================================================= */
+        async function refreshInbox() {
+            if (!account?.email) { toast('No active session', 'err'); return; }
+            const icon = document.getElementById('refIcon');
+            icon.classList.add('fa-spin');
+            try {
+                const data = await API.getMessages(account.email);
+                messages = Array.isArray(data) ? data : (data?.messages || data?.emails || data?.data || []);
+                renderMessages();
+                document.getElementById('msgCount').textContent = messages.length;
+                document.getElementById('lastRef').textContent = 'Updated: ' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit',
+                    minute: '2-digit' });
+                if (messages.length) toast(messages.length + ' message' + (messages.length > 1 ? 's' : '') + ' received', 'inf');
+            } catch (e) {
+                if (/404|expired|deactivated/i.test(e.message)) {
+                    toast('Mailbox expired', 'err');
+                    clearSession(false);
+                } else {
+                    toast('Refresh failed: ' + e.message, 'err');
+                }
+            } finally {
+                icon.classList.remove('fa-spin');
+            }
+        }
 
-function getFrom(m) { return m?.from || m?.sender || 'Unknown'; }
-function getSubject(m) { return String(m?.subject || m?.title || 'No Subject'); }
-function getBody(m) { return String(m?.body_text || m?.bodyText || m?.text || m?.body || m?.content || m?.preview || ''); }
-function getDate(m) { return m?.received_at || m?.receivedAt || m?.created_at || m?.createdAt || m?.date || ''; }
-function cleanFromName(f) {
-  if (!f) return 'Unknown';
-  const m = String(f).match(/^"?([^"<]+)"?\s*(?:<.*>)?$/);
-  return m ? m[1].trim() || f : String(f).replace(/<[^>]+>/g, '').trim() || String(f);
-}
-function formatDate(d) {
-  if (!d) return 'UNKNOWN';
-  const dt = new Date(d);
-  return isNaN(dt.getTime()) ? String(d) : dt.toLocaleString('id-ID', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
-}
-function formatLongDate(d) {
-  if (!d) return 'UNKNOWN';
-  const dt = new Date(d);
-  return isNaN(dt.getTime()) ? String(d) : dt.toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
-}
+        /* =========================================================
+           RENDER
+           ========================================================= */
+        function renderMessages() {
+            const container = document.getElementById('msgList');
+            document.getElementById('msgCount').textContent = messages.length || 0;
+            if (!messages?.length) {
+                container.innerHTML =
+                    `<div class="empty"><div class="icon"><i class="fas fa-inbox"></i></div><h3>Your inbox is empty</h3><p>Waiting for incoming emails</p></div>`;
+                return;
+            }
+            container.innerHTML = messages.map((msg, i) => {
+                const from = cleanFromName(getFrom(msg));
+                const subj = getSubject(msg);
+                const body = getBody(msg);
+                const otp = extractOTP(subj + ' ' + body);
+                const time = formatDate(getDate(msg));
+                return `<div class="msg-item" onclick="openMessage(${i})">
+              <div class="avatar">${esc(from.charAt(0) || '?').toUpperCase()}</div>
+              <div class="body">
+                <div class="top">
+                  <span class="from">${esc(from)}</span>
+                  <span class="time">${esc(time)}</span>
+                </div>
+                <div class="subj">${esc(subj)}</div>
+                <div class="preview">${esc(body.slice(0, 160))}</div>
+                ${otp ? `<div class="otp-badge"><i class="fas fa-shield-halved"></i> OTP: ${esc(otp)}</div>` : ''}
+              </div>
+            </div>`;
+            }).join('');
+        }
 
-function extractOTP(text) {
-  if (!text) return null;
-  const m = text.match(/\b\d{4,8}\b/);
-  return m ? m[0] : null;
-}
+        function getFrom(m) { return m?.from || m?.sender || 'Unknown'; }
 
-/* =========================================================
-   OPEN MESSAGE
-   ========================================================= */
-function openMessage(index) {
-  const msg = messages[index];
-  if (!msg) { toast('>> Message not found', 'err'); return; }
+        function getSubject(m) { return String(m?.subject || m?.title || 'No Subject'); }
 
-  const from = cleanFromName(getFrom(msg));
-  const subj = getSubject(msg);
-  const body = getBody(msg);
-  const html = msg?.body_html || msg?.bodyHtml || msg?.html || null;
-  const otp = extractOTP(subj + ' ' + body);
+        function getBody(m) { return String(m?.body_text || m?.bodyText || m?.text || m?.body || m?.content || m?.preview ||
+                ''); }
 
-  let htmlContent = '';
-  if (html) {
-    let clean = stripDanger(html);
-    clean = processLinks(clean);
-    htmlContent = `<div class="email-content">${clean}</div>`;
-  } else {
-    let text = esc(body || 'No content');
-    text = processPlainLinks(text);
-    htmlContent = `<div class="email-content">${text}</div>`;
-  }
+        function getDate(m) { return m?.received_at || m?.receivedAt || m?.created_at || m?.createdAt || m?.date || ''; }
 
-  document.getElementById('modalBody').innerHTML = `
-    <div class="detail-subj">${esc(subj)}</div>
-    <div class="detail-meta">
-      <span><i class="fas fa-user"></i> ${esc(from)}</span>
-      <span><i class="fas fa-clock"></i> ${esc(formatLongDate(getDate(msg)))}</span>
-      <span><i class="fas fa-tag"></i> ${esc(account.email)}</span>
-    </div>
-    ${otp ? `<div class="otp-box"><div><div class="lbl">Detected OTP</div><div class="code">${esc(otp)}</div></div><button class="copy-otp" onclick="copyOTP('${escJs(otp)}')"><i class="fas fa-copy"></i> Copy</button></div>` : ''}
-    ${htmlContent}
-  `;
+        function cleanFromName(f) {
+            if (!f) return 'Unknown';
+            const m = String(f).match(/^"?([^"<]+)"?\s*(?:<.*>)?$/);
+            return m ? m[1].trim() || f : String(f).replace(/<[^>]+>/g, '').trim() || String(f);
+        }
 
-  document.getElementById('modalBg').classList.add('open');
-}
+        function formatDate(d) {
+            if (!d) return 'Unknown';
+            const dt = new Date(d);
+            return isNaN(dt.getTime()) ? String(d) : dt.toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit',
+                minute: '2-digit' });
+        }
 
-/* =========================================================
-   LINK PROCESSING - BISA DIKLIK, DISALIN, LONG PRESS
-   ========================================================= */
-function processLinks(html) {
-  let processed = html.replace(/<a\s+([^>]*href=["']([^"']*)["'][^>]*)>(.*?)<\/a>/gi, function(m, attrs, href, text) {
-    if (!href || href === '#' || href.trim() === '') return m;
-    return `<div class="link-wrap" data-url="${escJs(href)}">
-      <div class="link-text"><a href="${esc(href)}" target="_blank" rel="noopener">${text || esc(href)}</a></div>
-      <div class="actions">
-        <button class="btn-open" onclick="event.stopPropagation(); openLink('${escJs(href)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
-        <button class="btn-copy" onclick="event.stopPropagation(); copyLink('${escJs(href)}')"><i class="fas fa-copy"></i> Salin</button>
-      </div>
-    </div>`;
-  });
+        function formatLongDate(d) {
+            if (!d) return 'Unknown';
+            const dt = new Date(d);
+            return isNaN(dt.getTime()) ? String(d) : dt.toLocaleString('id-ID', { weekday: 'long', day: 'numeric',
+                month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
 
-  processed = processed.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
-    if (url.match(/href=/i)) return url;
-    return `<div class="link-wrap" data-url="${escJs(url)}">
-      <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>
-      <div class="actions">
-        <button class="btn-open" onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
-        <button class="btn-copy" onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
-      </div>
-    </div>`;
-  });
+        function extractOTP(text) {
+            if (!text) return null;
+            const m = text.match(/\b\d{4,8}\b/);
+            return m ? m[0] : null;
+        }
 
-  return processed;
-}
+        /* =========================================================
+           OPEN MESSAGE
+           ========================================================= */
+        function openMessage(index) {
+            const msg = messages[index];
+            if (!msg) { toast('Message not found', 'err'); return; }
 
-function processPlainLinks(text) {
-  return text.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
-    return `<div class="link-wrap" data-url="${escJs(url)}">
-      <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>
-      <div class="actions">
-        <button class="btn-open" onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
-        <button class="btn-copy" onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
-      </div>
-    </div>`;
-  });
-}
+            const from = cleanFromName(getFrom(msg));
+            const subj = getSubject(msg);
+            const body = getBody(msg);
+            const html = msg?.body_html || msg?.bodyHtml || msg?.html || null;
+            const otp = extractOTP(subj + ' ' + body);
 
-/* =========================================================
-   FUNGSI LINK
-   ========================================================= */
-function openLink(url) { if (url) window.open(url, '_blank', 'noopener,noreferrer'); }
+            let htmlContent = '';
+            if (html) {
+                let clean = stripDanger(html);
+                clean = processLinks(clean);
+                htmlContent = `<div class="email-content">${clean}</div>`;
+            } else {
+                let text = esc(body || 'No content');
+                text = processPlainLinks(text);
+                htmlContent = `<div class="email-content">${text}</div>`;
+            }
 
-async function copyLink(url) {
-  if (!url) { toast('>> Tidak ada link', 'err'); return; }
-  try {
-    await navigator.clipboard.writeText(url);
-    showCopyToast('📋 Link disalin!');
-    toast('>> Link disalin', 'ok');
-  } catch(e) {
-    const ta = document.createElement('textarea');
-    ta.value = url;
-    ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showCopyToast('📋 Link disalin!');
-    toast('>> Link disalin', 'ok');
-  }
-}
+            document.getElementById('modalBody').innerHTML = `
+            <div class="detail-subj">${esc(subj)}</div>
+            <div class="detail-meta">
+              <span><i class="fas fa-user"></i> ${esc(from)}</span>
+              <span><i class="fas fa-clock"></i> ${esc(formatLongDate(getDate(msg)))}</span>
+              <span><i class="fas fa-tag"></i> ${esc(account.email)}</span>
+            </div>
+            ${otp ? `<div class="otp-box"><div><div class="lbl">Detected OTP</div><div class="code">${esc(otp)}</div></div><button class="copy-otp" onclick="copyOTP('${escJs(otp)}')"><i class="fas fa-copy"></i> Copy</button></div>` : ''}
+            ${htmlContent}
+          `;
 
-/* Toast untuk long press / copy */
-function showCopyToast(msg) {
-  const el = document.getElementById('copyToast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(el._hide);
-  el._hide = setTimeout(() => el.classList.remove('show'), 1500);
-}
+            document.getElementById('modalBg').classList.add('open');
+        }
 
-/* =========================================================
-   COPY FUNCTIONS
-   ========================================================= */
-async function copyEmail() {
-  if (!account) return;
-  try {
-    await navigator.clipboard.writeText(account.email);
-    toast('>> Email copied', 'ok');
-  } catch(e) { toast('>> Copy failed', 'err'); }
-}
+        /* =========================================================
+           LINK PROCESSING
+           ========================================================= */
+        function processLinks(html) {
+            let processed = html.replace(/<a\s+([^>]*href=["']([^"']*)["'][^>]*)>(.*?)<\/a>/gi, function(m, attrs, href, text) {
+                if (!href || href === '#' || href.trim() === '') return m;
+                return `<div class="link-wrap">
+              <div class="link-text"><a href="${esc(href)}" target="_blank" rel="noopener">${text || esc(href)}</a></div>
+              <div class="actions">
+                <button onclick="event.stopPropagation(); openLink('${escJs(href)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
+                <button onclick="event.stopPropagation(); copyLink('${escJs(href)}')"><i class="fas fa-copy"></i> Salin</button>
+              </div>
+            </div>`;
+            });
 
-async function copyOTP(otp) {
-  try { await navigator.clipboard.writeText(otp); toast('>> OTP copied', 'ok'); } catch(e) { toast('>> Copy failed', 'err'); }
-}
+            processed = processed.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
+                if (url.match(/href=/i)) return url;
+                return `<div class="link-wrap">
+              <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>
+              <div class="actions">
+                <button onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
+                <button onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
+              </div>
+            </div>`;
+            });
 
-/* =========================================================
-   DELETE
-   ========================================================= */
-async function deleteAccount() {
-  if (!account) return;
-  if (!confirm('Hapus email ini? Semua data akan hilang.')) return;
-  const btn = document.getElementById('delBtn');
-  btn.disabled = true;
-  try { await API.deleteMailbox(account.email); } catch(e) {}
-  clearSession(true);
-  toast('>> Address terminated', 'ok');
-}
+            return processed;
+        }
 
-/* =========================================================
-   CLEAR
-   ========================================================= */
-function clearSession(showToast = false) {
-  account = null;
-  messages = [];
-  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
-  localStorage.removeItem('neonmail_session');
-  document.getElementById('emailDisplay').textContent = 'GENERATE NEW ADDRESS';
-  document.getElementById('emailDisplay').classList.add('placeholder');
-  document.getElementById('copyBtn').disabled = true;
-  document.getElementById('refBtn').disabled = true;
-  document.getElementById('delBtn').disabled = true;
-  document.getElementById('msgCount').textContent = '0';
-  document.getElementById('lastRef').textContent = 'STANDBY';
-  renderMessages();
-  if (showToast) toast('>> Session cleared', 'ok');
-}
+        function processPlainLinks(text) {
+            return text.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
+                return `<div class="link-wrap">
+              <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>
+              <div class="actions">
+                <button onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
+                <button onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
+              </div>
+            </div>`;
+            });
+        }
 
-/* =========================================================
-   AUTO REFRESH
-   ========================================================= */
-function startAutoRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(() => { if (account && !document.hidden) refreshInbox(); }, 12000);
-}
-startAutoRefresh();
+        function openLink(url) { if (url) window.open(url, '_blank', 'noopener,noreferrer'); }
 
-/* =========================================================
-   MODAL
-   ========================================================= */
-function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
-document.getElementById('modalBg').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); if (e.ctrlKey && e.key === 'r') { e.preventDefault(); if (account) refreshInbox(); } });
+        async function copyLink(url) {
+            if (!url) { toast('Tidak ada link', 'err'); return; }
+            try {
+                await navigator.clipboard.writeText(url);
+                toast('Link disalin!', 'ok');
+            } catch (e) {
+                const ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                toast('Link disalin!', 'ok');
+            }
+        }
 
-/* =========================================================
-   HELPERS
-   ========================================================= */
-function esc(text) {
-  if (text == null) return '';
-  const d = document.createElement('div');
-  d.textContent = String(text);
-  return d.innerHTML;
-}
-function escJs(text) { return String(text).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r/g,'\\r').replace(/\n/g,'\\n'); }
-function stripDanger(html) {
-  return String(html)
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
-    .replace(/<object[\s\S]*?<\/object>/gi, '')
-    .replace(/<embed[\s\S]*?<\/embed>/gi, '')
-    .replace(/<form[\s\S]*?<\/form>/gi, '')
-    .replace(/on\w+="[^"]*"/gi, '')
-    .replace(/on\w+='[^']*'/gi, '');
-}
+        /* =========================================================
+           COPY FUNCTIONS
+           ========================================================= */
+        async function copyEmail() {
+            if (!account) return;
+            try {
+                await navigator.clipboard.writeText(account.email);
+                toast('Email copied!', 'ok');
+            } catch (e) { toast('Copy failed', 'err'); }
+        }
 
-/* =========================================================
-   TOAST
-   ========================================================= */
-function toast(message, type = 'inf') {
-  const stack = document.getElementById('toastStack');
-  const el = document.createElement('div');
-  el.className = 'toast ' + type;
-  const icons = { ok: 'fa-check-circle', err: 'fa-times-circle', inf: 'fa-info-circle' };
-  el.innerHTML = '<i class="fas ' + (icons[type] || icons.inf) + '"></i> ' + message;
-  stack.appendChild(el);
-  setTimeout(() => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateX(100%)';
-    setTimeout(() => { if (el.parentNode) el.remove(); }, 400);
-  }, 3500);
-}
+        async function copyOTP(otp) {
+            try { await navigator.clipboard.writeText(otp);
+                toast('OTP copied!', 'ok'); } catch (e) { toast('Copy failed', 'err'); }
+        }
 
-/* =========================================================
-   INIT
-   ========================================================= */
-document.getElementById('connTxt').textContent = 'READY';
-</script>
+        /* =========================================================
+           DELETE
+           ========================================================= */
+        async function deleteAccount() {
+            if (!account) return;
+            if (!confirm('Hapus email ini? Semua data akan hilang.')) return;
+            const btn = document.getElementById('delBtn');
+            btn.disabled = true;
+            try { await API.deleteMailbox(account.email); } catch (e) {}
+            clearSession(true);
+            toast('Address terminated', 'ok');
+        }
+
+        /* =========================================================
+           CLEAR
+           ========================================================= */
+        function clearSession(showToast = false) {
+            account = null;
+            messages = [];
+            if (refreshTimer) { clearInterval(refreshTimer);
+                refreshTimer = null; }
+            localStorage.removeItem('neonmail_session');
+            document.getElementById('emailDisplay').value = 'Generate new address';
+            document.getElementById('copyBtn').disabled = true;
+            document.getElementById('refBtn').disabled = true;
+            document.getElementById('refBtn2').disabled = true;
+            document.getElementById('delBtn').disabled = true;
+            document.getElementById('msgCount').textContent = '0';
+            document.getElementById('lastRef').textContent = 'Waiting...';
+            renderMessages();
+            if (showToast) toast('Session cleared', 'ok');
+        }
+
+        /* =========================================================
+           AUTO REFRESH
+           ========================================================= */
+        function startAutoRefresh() {
+            if (refreshTimer) clearInterval(refreshTimer);
+            refreshTimer = setInterval(() => { if (account && !document.hidden) refreshInbox(); }, 12000);
+        }
+        startAutoRefresh();
+
+        /* =========================================================
+           MODAL
+           ========================================================= */
+        function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+        document.getElementById('modalBg').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); if (e.ctrlKey && e.key ===
+                'r') { e.preventDefault(); if (account) refreshInbox(); } });
+
+        /* =========================================================
+           HELPERS
+           ========================================================= */
+        function esc(text) {
+            if (text == null) return '';
+            const d = document.createElement('div');
+            d.textContent = String(text);
+            return d.innerHTML;
+        }
+
+        function escJs(text) { return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r/g, '\\r')
+            .replace(/\n/g, '\\n'); }
+
+        function stripDanger(html) {
+            return String(html)
+                .replace(/<script[\s\S]*?<\/script>/gi, '')
+                .replace(/<style[\s\S]*?<\/style>/gi, '')
+                .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+                .replace(/<object[\s\S]*?<\/object>/gi, '')
+                .replace(/<embed[\s\S]*?<\/embed>/gi, '')
+                .replace(/<form[\s\S]*?<\/form>/gi, '')
+                .replace(/on\w+="[^"]*"/gi, '')
+                .replace(/on\w+='[^']*'/gi, '');
+        }
+
+        /* =========================================================
+           TOAST
+           ========================================================= */
+        function toast(message, type = 'inf') {
+            const stack = document.getElementById('toastStack');
+            const el = document.createElement('div');
+            el.className = 'toast ' + type;
+            const icons = { ok: 'fa-check-circle', err: 'fa-times-circle', inf: 'fa-info-circle' };
+            el.innerHTML = '<i class="fas ' + (icons[type] || icons.inf) + '"></i> ' + message;
+            stack.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(-10px)';
+                setTimeout(() => { if (el.parentNode) el.remove(); }, 300);
+            }, 3500);
+        }
+    </script>
+
 </body>
 </html>
