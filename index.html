@@ -684,7 +684,7 @@ button{
 
 .modal-box{
   width:100%;
-  max-width:600px;
+  max-width:700px;
   max-height:85vh;
   background:rgba(10,10,20,.95);
   border:1px solid var(--border);
@@ -838,6 +838,57 @@ button{
 
 .detail-html a{
   color:var(--neon-cyan);
+  text-decoration:underline;
+  word-break:break-all;
+}
+
+.detail-html a:hover{
+  color:var(--neon-pink);
+}
+
+/* Style untuk button/link dari email */
+.detail-html .email-btn,
+.detail-html .btn,
+.detail-html button,
+.detail-html [role="button"],
+.detail-html .button,
+.detail-html .cta-button,
+.detail-html .action-button,
+.detail-html .link-button {
+  display:inline-block;
+  background:linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+  color:#000 !important;
+  padding:12px 28px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:14px;
+  border:none;
+  cursor:pointer;
+  transition:.3s;
+  box-shadow:0 0 30px rgba(0,240,255,.2);
+}
+
+.detail-html .email-btn:hover,
+.detail-html .btn:hover,
+.detail-html button:hover,
+.detail-html [role="button"]:hover,
+.detail-html .button:hover,
+.detail-html .cta-button:hover,
+.detail-html .action-button:hover,
+.detail-html .link-button:hover {
+  transform:translateY(-2px);
+  box-shadow:0 0 50px rgba(0,240,255,.4);
+}
+
+/* Gaya untuk container link/button agar terlihat */
+.detail-html .email-link-container {
+  margin:16px 0;
+  padding:16px;
+  background:rgba(0,240,255,.05);
+  border:1px solid var(--border);
+  border-radius:8px;
+  text-align:center;
 }
 
 /* ================= TOAST ================= */
@@ -1217,7 +1268,7 @@ const TEMPY_API = 'https://tempy.email/api/v1';
 let account = null;
 let messages = [];
 let refreshTimer = null;
-
+let isGenerating = false;
 
 /* =========================================================
    CANVAS BACKGROUND
@@ -1536,6 +1587,23 @@ const API = {
 
 async function generateEmail(){
 
+  if(isGenerating) return;
+  
+  if(account){
+    const confirmNew = confirm(
+      'Anda sudah memiliki email aktif: ' + account.email + '\n\n' +
+      'Buat email baru? (Email lama akan dihapus)'
+    );
+    if(!confirmNew) return;
+    
+    try {
+      await API.deleteMailbox(account.email);
+    } catch(e) {
+      console.warn('Delete old mailbox error:', e);
+    }
+    clearSession(false);
+  }
+
   const btn =
     document.getElementById('genBtn');
 
@@ -1543,21 +1611,13 @@ async function generateEmail(){
     btn.innerHTML;
 
   btn.disabled = true;
+  isGenerating = true;
 
   btn.innerHTML =
     '<div class="spin"></div>' +
     '<span>Creating...</span>';
 
   try{
-
-    /*
-     * IMPORTANT:
-     * Tidak lagi membuat alamat palsu
-     * secara random.
-     *
-     * Server yang membuat mailbox
-     * sebenarnya.
-     */
 
     const result =
       await API.createMailbox();
@@ -1634,7 +1694,7 @@ async function generateEmail(){
   finally{
 
     btn.disabled = false;
-
+    isGenerating = false;
     btn.innerHTML = original;
 
   }
@@ -1685,7 +1745,17 @@ document.addEventListener(
           'inf'
         );
 
-        await refreshInbox();
+        try {
+          await API.getMailbox(account.email);
+          await refreshInbox();
+        } catch(error) {
+          if(/404|not found|expired|deactivated/i.test(getErrorMessage(error))) {
+            toast('>> MAILBOX EXPIRED', 'err');
+            clearSession(false);
+          } else {
+            await refreshInbox();
+          }
+        }
 
       }
 
@@ -1842,12 +1912,6 @@ async function refreshInbox(){
       false,
       'API OFFLINE'
     );
-
-    /*
-     * Kalau mailbox sudah expired,
-     * hapus session agar user tidak
-     * terus mendapat error.
-     */
 
     if(
       /404|not found|expired|deactivated/i
@@ -2075,7 +2139,63 @@ function renderMessages(){
 
 
 /* =========================================================
-   OPEN MESSAGE
+   RENDER HTML EMAIL DENGAN LINK & BUTTON
+   ========================================================= */
+
+function renderEmailContent(html, body) {
+  
+  // Jika ada HTML dari pengirim, tampilkan dengan link yang bisa diklik
+  if(html) {
+    // Clean HTML dari script berbahaya
+    let cleanHtml = stripDangerousContent(html);
+    
+    // Proses link agar bisa diklik
+    cleanHtml = processLinks(cleanHtml);
+    
+    // Bungkus dengan container yang aman
+    return `
+      <div class="detail-html email-content">
+        ${cleanHtml}
+      </div>
+    `;
+  }
+  
+  // Fallback ke plain text
+  return `
+    <div class="detail-html">
+      <pre>${escapeHtml(body || 'No content')}</pre>
+    </div>
+  `;
+}
+
+function processLinks(html) {
+  // Ubah link mentah menjadi anchor tag
+  let processed = html;
+  
+  // Pattern untuk URL
+  const urlPattern = /(https?:\/\/[^\s<>"']+)/gi;
+  
+  // Pattern untuk mailto
+  const mailtoPattern = /(mailto:[^\s<>"']+)/gi;
+  
+  // Ganti URL dengan anchor tag
+  processed = processed.replace(urlPattern, function(url) {
+    // Skip jika sudah dalam tag anchor
+    if(url.match(/^<a\s/i)) return url;
+    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`;
+  });
+  
+  // Ganti mailto dengan anchor tag
+  processed = processed.replace(mailtoPattern, function(mailto) {
+    return `<a href="${escapeHtml(mailto)}">${escapeHtml(mailto)}</a>`;
+  });
+  
+  return processed;
+}
+
+
+/* =========================================================
+   OPEN MESSAGE - DIPERBAIKI UNTUK TAMPILKAN LINK
    ========================================================= */
 
 async function openMessage(index){
@@ -2160,34 +2280,8 @@ async function openMessage(index){
 
   }
 
-
-  let contentHtml = '';
-
-  if(html){
-
-    /*
-     * Email HTML berasal dari inbox eksternal.
-     *
-     * Kita tampilkan sebagai teks
-     * agar HTML email tidak bisa
-     * menjalankan script di halaman utama.
-     */
-
-    contentHtml = `
-      <pre>${escapeHtml(
-        stripDangerousContent(html)
-      )}</pre>
-    `;
-
-  }
-  else{
-
-    contentHtml = `
-      <pre>${escapeHtml(body || 'No content')}</pre>
-    `;
-
-  }
-
+  // Render konten email dengan link yang bisa diklik
+  const contentHtml = renderEmailContent(html, body);
 
   document.getElementById(
     'modalBody'
@@ -2220,9 +2314,7 @@ async function openMessage(index){
 
     ${otpHtml}
 
-    <div class="detail-html">
-      ${contentHtml}
-    </div>
+    ${contentHtml}
 
   `;
 
@@ -2687,13 +2779,6 @@ function extractOTP(text){
 
   }
 
-  /*
-   * Numeric OTP:
-   * 1234
-   * 123456
-   * 12345678
-   */
-
   const numeric =
     text.match(
       /\b\d{4,8}\b/
@@ -2704,12 +2789,6 @@ function extractOTP(text){
     return numeric[0];
 
   }
-
-  /*
-   * Common separated OTP:
-   * 123-456
-   * 12-34-56
-   */
 
   const separated =
     text.match(
@@ -2901,6 +2980,26 @@ function stripDangerousContent(html){
     .replace(
       /<iframe[\s\S]*?<\/iframe>/gi,
       ''
+    )
+    .replace(
+      /<object[\s\S]*?<\/object>/gi,
+      ''
+    )
+    .replace(
+      /<embed[\s\S]*?<\/embed>/gi,
+      ''
+    )
+    .replace(
+      /<form[\s\S]*?<\/form>/gi,
+      ''
+    )
+    .replace(
+      /on\w+="[^"]*"/gi,
+      ''
+    )
+    .replace(
+      /on\w+='[^']*'/gi,
+      ''
     );
 
 }
@@ -2962,6 +3061,69 @@ function getErrorMessage(error){
   }
 
   return 'Unknown error';
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function toast(message, type = 'inf') {
+
+  const stack =
+    document.getElementById(
+      'toastStack'
+    );
+
+  const el =
+    document.createElement('div');
+
+  el.className =
+    'toast ' + type;
+
+  const icons = {
+    ok: 'fa-check-circle',
+    err: 'fa-times-circle',
+    inf: 'fa-info-circle'
+  };
+
+  const icon =
+    icons[type] ||
+    icons.inf;
+
+  el.innerHTML =
+    '<i class="fas ' +
+    icon +
+    '"></i> ' +
+    message;
+
+  stack.appendChild(el);
+
+  setTimeout(
+    () => {
+
+      el.style.opacity = '0';
+
+      el.style.transform =
+        'translateX(100%)';
+
+      setTimeout(
+        () => {
+
+          if(el.parentNode){
+
+            el.remove();
+
+          }
+
+        },
+        400
+      );
+
+    },
+    4000
+  );
 
 }
 
