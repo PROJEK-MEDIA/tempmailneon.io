@@ -21,13 +21,12 @@
             padding: 20px;
         }
 
-        /* Container */
         .container {
             max-width: 780px;
             margin: 0 auto;
         }
 
-        /* Header */
+        /* HEADER */
         .header {
             text-align: center;
             padding: 30px 0 20px;
@@ -55,7 +54,7 @@
             margin-top: 4px;
         }
 
-        /* Card */
+        /* CARD */
         .card {
             background: #ffffff;
             border-radius: 16px;
@@ -77,7 +76,7 @@
             gap: 8px;
         }
 
-        /* Email Box */
+        /* EMAIL BOX */
         .email-box {
             display: flex;
             align-items: center;
@@ -146,7 +145,7 @@
             color: #fff;
         }
 
-        /* Button Row */
+        /* BUTTON */
         .btn-row {
             display: flex;
             gap: 10px;
@@ -215,7 +214,7 @@
             cursor: not-allowed;
         }
 
-        /* Inbox */
+        /* INBOX */
         .inbox-header {
             display: flex;
             justify-content: space-between;
@@ -248,7 +247,7 @@
             color: #9ca3af;
         }
 
-        /* Message List */
+        /* MESSAGE LIST */
         .msg-list {
             display: flex;
             flex-direction: column;
@@ -345,7 +344,7 @@
             color: #4f46e5;
         }
 
-        /* Empty State */
+        /* EMPTY */
         .empty {
             text-align: center;
             padding: 50px 20px;
@@ -372,7 +371,7 @@
             margin-top: 4px;
         }
 
-        /* Modal */
+        /* MODAL */
         .modal {
             position: fixed;
             inset: 0;
@@ -448,7 +447,7 @@
             flex: 1;
         }
 
-        /* Detail */
+        /* DETAIL */
         .detail-subj {
             font-size: 18px;
             font-weight: 600;
@@ -523,7 +522,7 @@
             background: #4338ca;
         }
 
-        /* Email Content */
+        /* EMAIL CONTENT */
         .email-content {
             font-size: 14px;
             line-height: 1.8;
@@ -537,13 +536,14 @@
         .email-content a {
             color: #4f46e5;
             text-decoration: underline;
+            font-weight: 500;
         }
 
         .email-content a:hover {
             color: #4338ca;
         }
 
-        /* Link Wrapper */
+        /* LINK WRAPPER - DETECT LINK DI PLAIN TEXT */
         .link-wrap {
             display: flex;
             align-items: center;
@@ -556,6 +556,11 @@
             flex-wrap: wrap;
         }
 
+        .link-wrap:hover {
+            border-color: #4f46e5;
+            background: #f0f2ff;
+        }
+
         .link-wrap .link-text {
             flex: 1;
             min-width: 60px;
@@ -566,6 +571,11 @@
         .link-wrap .link-text a {
             color: #4f46e5;
             text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .link-wrap .link-text a:hover {
+            color: #4338ca;
         }
 
         .link-wrap .actions {
@@ -592,7 +602,12 @@
             border-color: #4f46e5;
         }
 
-        /* Toast */
+        .link-wrap .actions button.btn-copy-link:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+
+        /* TOAST */
         .toast-stack {
             position: fixed;
             bottom: 20px;
@@ -638,7 +653,7 @@
             background: #1e40af;
         }
 
-        /* Spinner */
+        /* SPINNER */
         .spinner {
             display: inline-block;
             width: 16px;
@@ -655,66 +670,54 @@
             }
         }
 
-        /* Responsive */
+        /* RESPONSIVE */
         @media (max-width: 600px) {
             body {
                 padding: 12px;
             }
-
             .card {
                 padding: 18px 16px;
             }
-
             .email-box {
                 padding: 10px 14px;
                 flex-wrap: wrap;
             }
-
             .email-box .addr {
                 font-size: 13px;
                 min-width: 120px;
                 order: 2;
                 flex: 1 1 100%;
             }
-
             .email-box .icon {
                 order: 1;
             }
-
             .email-box .actions {
                 order: 3;
             }
-
             .btn-row .btn {
                 flex: 1;
                 justify-content: center;
                 padding: 8px 14px;
                 font-size: 12px;
             }
-
             .modal-box {
                 max-width: 100%;
                 margin: 10px;
             }
-
             .modal-body {
                 padding: 16px;
             }
-
             .otp-box .code {
                 font-size: 22px;
                 letter-spacing: 3px;
             }
-
             .link-wrap {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .link-wrap .actions {
                 justify-content: center;
             }
-
             .inbox-header .meta {
                 display: none;
             }
@@ -943,7 +946,7 @@
         }
 
         /* =========================================================
-           RENDER
+           RENDER MESSAGES
            ========================================================= */
         function renderMessages() {
             const container = document.getElementById('msgList');
@@ -1010,7 +1013,7 @@
         }
 
         /* =========================================================
-           OPEN MESSAGE
+           OPEN MESSAGE - DIPERBAIKI DETECT LINK DI PLAIN TEXT
            ========================================================= */
         function openMessage(index) {
             const msg = messages[index];
@@ -1023,13 +1026,16 @@
             const otp = extractOTP(subj + ' ' + body);
 
             let htmlContent = '';
+
             if (html) {
+                // Kalo ada HTML, proses HTML
                 let clean = stripDanger(html);
-                clean = processLinks(clean);
+                clean = processHtmlLinks(clean);
                 htmlContent = `<div class="email-content">${clean}</div>`;
             } else {
+                // Kalo plain text, detect link dan bikin klikable
                 let text = esc(body || 'No content');
-                text = processPlainLinks(text);
+                text = processPlainTextLinks(text);
                 htmlContent = `<div class="email-content">${text}</div>`;
             }
 
@@ -1048,27 +1054,43 @@
         }
 
         /* =========================================================
-           LINK PROCESSING
+           PROCESS PLAIN TEXT - DETECT LINK & BUAT KLIKABLE
            ========================================================= */
-        function processLinks(html) {
-            let processed = html.replace(/<a\s+([^>]*href=["']([^"']*)["'][^>]*)>(.*?)<\/a>/gi, function(m, attrs, href, text) {
-                if (!href || href === '#' || href.trim() === '') return m;
-                return `<div class="link-wrap">
-              <div class="link-text"><a href="${esc(href)}" target="_blank" rel="noopener">${text || esc(href)}</a></div>
-              <div class="actions">
-                <button onclick="event.stopPropagation(); openLink('${escJs(href)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
-                <button onclick="event.stopPropagation(); copyLink('${escJs(href)}')"><i class="fas fa-copy"></i> Salin</button>
-              </div>
-            </div>`;
-            });
-
-            processed = processed.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
-                if (url.match(/href=/i)) return url;
+        function processPlainTextLinks(text) {
+            // Detect URL: http/https
+            let processed = text.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
                 return `<div class="link-wrap">
               <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>
               <div class="actions">
                 <button onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
-                <button onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
+                <button class="btn-copy-link" onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
+              </div>
+            </div>`;
+            });
+
+            // Detect link format: "Sign in to Alight Creative (https://...)"
+            processed = processed.replace(/\[([^\]]+)\]\(([^)]+)\)/gi, function(match, text, url) {
+                if (!url || url === '#' || url.trim() === '') return match;
+                return `<div class="link-wrap">
+              <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(text || url)}</a></div>
+              <div class="actions">
+                <button onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
+                <button class="btn-copy-link" onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
+              </div>
+            </div>`;
+            });
+
+            // Detect link format: "click this link: Sign in to Alight Creative"
+            // Cari teks yang diikuti URL
+            processed = processed.replace(/([^<>\n]*?)(https?:\/\/[^\s<>"']+)/gi, function(match, textBefore, url) {
+                // Kalo udah ada link wrapper, skip
+                if (match.includes('link-wrap')) return match;
+                // Kalo textBefore kosong atau cuma spasi, return URL aja                const label = textBefore.trim() || 'Link';
+                return `<div class="link-wrap">
+              <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a></div>
+              <div class="actions">
+                <button onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
+                <button class="btn-copy-link" onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
               </div>
             </div>`;
             });
@@ -1076,26 +1098,50 @@
             return processed;
         }
 
-        function processPlainLinks(text) {
-            return text.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
+        /* =========================================================
+           PROCESS HTML LINKS
+           ========================================================= */
+        function processHtmlLinks(html) {
+            let processed = html.replace(/<a\s+([^>]*href=["']([^"']*)["'][^>]*)>(.*?)<\/a>/gi, function(m, attrs, href, text) {
+                if (!href || href === '#' || href.trim() === '') return m;
+                return `<div class="link-wrap">
+              <div class="link-text"><a href="${esc(href)}" target="_blank" rel="noopener">${text || esc(href)}</a></div>
+              <div class="actions">
+                <button onclick="event.stopPropagation(); openLink('${escJs(href)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
+                <button class="btn-copy-link" onclick="event.stopPropagation(); copyLink('${escJs(href)}')"><i class="fas fa-copy"></i> Salin</button>
+              </div>
+            </div>`;
+            });
+
+            // Juga detect URL mentah di HTML
+            processed = processed.replace(/(https?:\/\/[^\s<>"']+)/gi, function(url) {
+                if (url.match(/href=/i) || url.match(/link-wrap/)) return url;
                 return `<div class="link-wrap">
               <div class="link-text"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></div>
               <div class="actions">
                 <button onclick="event.stopPropagation(); openLink('${escJs(url)}')"><i class="fas fa-external-link-alt"></i> Buka</button>
-                <button onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
+                <button class="btn-copy-link" onclick="event.stopPropagation(); copyLink('${escJs(url)}')"><i class="fas fa-copy"></i> Salin</button>
               </div>
             </div>`;
             });
+
+            return processed;
         }
 
-        function openLink(url) { if (url) window.open(url, '_blank', 'noopener,noreferrer'); }
+        /* =========================================================
+           LINK FUNCTIONS
+           ========================================================= */
+        function openLink(url) {
+            if (url) window.open(url, '_blank', 'noopener,noreferrer');
+        }
 
         async function copyLink(url) {
             if (!url) { toast('Tidak ada link', 'err'); return; }
             try {
                 await navigator.clipboard.writeText(url);
-                toast('Link disalin!', 'ok');
+                toast('✅ Link disalin!', 'ok');
             } catch (e) {
+                // Fallback
                 const ta = document.createElement('textarea');
                 ta.value = url;
                 ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
@@ -1103,7 +1149,7 @@
                 ta.select();
                 document.execCommand('copy');
                 document.body.removeChild(ta);
-                toast('Link disalin!', 'ok');
+                toast('✅ Link disalin!', 'ok');
             }
         }
 
@@ -1114,13 +1160,15 @@
             if (!account) return;
             try {
                 await navigator.clipboard.writeText(account.email);
-                toast('Email copied!', 'ok');
+                toast('✅ Email copied!', 'ok');
             } catch (e) { toast('Copy failed', 'err'); }
         }
 
         async function copyOTP(otp) {
-            try { await navigator.clipboard.writeText(otp);
-                toast('OTP copied!', 'ok'); } catch (e) { toast('Copy failed', 'err'); }
+            try {
+                await navigator.clipboard.writeText(otp);
+                toast('✅ OTP copied!', 'ok');
+            } catch (e) { toast('Copy failed', 'err'); }
         }
 
         /* =========================================================
@@ -1170,8 +1218,13 @@
            ========================================================= */
         function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
         document.getElementById('modalBg').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); if (e.ctrlKey && e.key ===
-                'r') { e.preventDefault(); if (account) refreshInbox(); } });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                if (account) refreshInbox();
+            }
+        });
 
         /* =========================================================
            HELPERS
